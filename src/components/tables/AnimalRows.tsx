@@ -1,0 +1,30 @@
+import { TableCell, TableRow } from '@/components/ui/table.tsx'
+import { Animal } from '@/data/baseAnimals.ts'
+import { Button } from '@/components/ui/button.tsx'
+import { Cross1Icon, ChatBubbleIcon } from '@radix-ui/react-icons'
+import { useAnimalsStore } from '@/store/animalsStore.ts'
+import { PRIMARY_BLUE, PRIMARY_RED } from '@/constants/colors.ts'
+
+export const AnimalRows = ({ animals }: { animals: Animal[] }) => {
+  const removeAnimal = useAnimalsStore((state) => state.removeAnimal)
+  return animals.map((animal) => (
+    <TableRow key={animal.name}>
+      <TableCell>{animal.name}</TableCell>
+      <TableCell>{animal.size}</TableCell>
+      <TableCell>{animal.weight}</TableCell>
+      <TableCell className='flex gap-2 text-right'>
+        <Button size={'icon'} variant={'ghost'}>
+          <ChatBubbleIcon color={PRIMARY_BLUE} />
+        </Button>
+        <Button size={'icon'} variant={'ghost'}>
+          <Cross1Icon
+            color={PRIMARY_RED}
+            onClick={() => {
+              removeAnimal(animal.id)
+            }}
+          />
+        </Button>
+      </TableCell>
+    </TableRow>
+  ))
+}
