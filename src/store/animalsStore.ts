@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { Animal, STARTING_ANIMALS_LIST } from '@/data/baseAnimals.ts'
+import { Animal, STARTING_ANIMALS } from '@/data/baseAnimals.ts'
 
 interface AnimalsStore {
   animals: Animal[]
@@ -9,7 +9,7 @@ interface AnimalsStore {
 }
 
 export const useAnimalsStore = create<AnimalsStore>((set, get) => ({
-  animals: STARTING_ANIMALS_LIST,
+  animals: [...STARTING_ANIMALS],
   addAnimal: (animal: Animal) => {
     set({ animals: [...get().animals, animal] })
   },

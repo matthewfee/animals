@@ -11,15 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button.tsx'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select.tsx'
 import { randomAnimal, randomAnimalName } from '@/utils/randomAnimal.ts'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
 import { useAnimalsStore } from '@/store/animalsStore.ts'
@@ -29,6 +21,8 @@ import { generateRandomSound } from '@/utils/randomSound.ts'
 import { getRandom } from '@/utils/random.ts'
 import { Screens } from '@/store/screenStore.ts'
 import { useScreenStore } from '@/store/screenStore.ts'
+import { FormFieldSelect } from '@/components/forms/FormFieldSelect.tsx'
+import { FormFieldInput } from '@/components/forms/FormFieldInput.tsx'
 
 const animalCreateFormSchema = z.object({
   name: z
@@ -58,9 +52,12 @@ export const CreateAnimalForm = () => {
     },
   })
   const setScreen = useScreenStore((state) => state.setScreen)
-
   function onSubmit(data: z.infer<typeof animalCreateFormSchema>) {
-    console.log(data)
+    if (!form.formState.isValid) {
+      form.trigger()
+      return
+    }
+
     const id = uuidv4()
     addAnimal({
       ...data,
@@ -79,132 +76,48 @@ export const CreateAnimalForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='dark space-y-8'>
-        <FormField
+        <FormFieldInput
           control={form.control}
-          name='name'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Animal Name</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder='name'
-                  value={field.value}
-                  onChange={(e) => {
-                    field.onChange(e)
-                  }}
-                />
-              </FormControl>
-              <FormDescription>This is your new animals' name.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='size'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Size</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder={`Select your animal's size`} />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {Object.values(AnimalSizes).map((size) => (
-                    <SelectItem key={size} value={size}>
-                      {size}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>This is your new animals' size.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='sound'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Sound</FormLabel>
-              <FormControl>
-                <Input placeholder='sound' {...field} />
-              </FormControl>
-              <FormDescription>
-                The type of sound your animal makes.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='loudness'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Loudness</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue
-                      placeholder={`Select your animal's loudness`}
-                    />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {Object.values(SoundLevels).map((loudness) => (
-                    <SelectItem key={loudness} value={loudness}>
-                      {loudness}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                This is your new animals' loudness.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+          name={'name'}
+          placeholder={'Name'}
+          label={'Name'}
+          description={'This is your new animals name.'}
         />
 
-        <FormField
+        <FormFieldInput
           control={form.control}
-          name='weight'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Weight</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder={`Select your animal's weight`} />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {Object.values(AnimalWeights).map((weight) => (
-                    <SelectItem key={weight} value={weight}>
-                      {weight}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                This is your new animals' weight.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+          name={'sound'}
+          placeholder={'Sound'}
+          label={'Sound'}
+          description={'This is your new animals sound.'}
         />
+
+        <FormFieldSelect
+          control={form.control}
+          options={Object.values(AnimalSizes)}
+          name={'size'}
+          description={
+            'This is your new animals size.Small animals will repeat their sounds more often.'
+          }
+          label={'Size'}
+        />
+
+        <FormFieldSelect
+          control={form.control}
+          options={Object.values(SoundLevels)}
+          name={'loudness'}
+          description={'This is your new animals loudness.'}
+          label={'Loudness'}
+        />
+
+        <FormFieldSelect
+          control={form.control}
+          options={Object.values(AnimalWeights)}
+          name={'weight'}
+          description={'This is your new animals weight.'}
+          label={'Weight'}
+        />
+
         <FormField
           control={form.control}
           name='canFly'

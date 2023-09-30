@@ -9,7 +9,7 @@ export const useSound = () => {
     const sound = animalInstance.makeSound()
     toast({
       title: animalInstance.name,
-      description: sound,
+      description: `♫ ${sound} ♫`,
     })
   }
 
