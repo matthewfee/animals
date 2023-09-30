@@ -37,6 +37,7 @@ export class AnimalClass {
     if (this.loudness === SoundLevels.VERY_LOUD) {
       sound = sound.toUpperCase() + '!!!!!'
     }
+
     return sound
   }
 }

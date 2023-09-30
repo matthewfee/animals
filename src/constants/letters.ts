@@ -1,0 +1,23 @@
+export const VOWELS = ['a', 'e', 'i', 'o', 'u'] as const
+export const CONSONANTS = [
+  'b',
+  'c',
+  'd',
+  'f',
+  'g',
+  'h',
+  'j',
+  'k',
+  'l',
+  'm',
+  'n',
+  'p',
+  'q',
+  's',
+  't',
+  'v',
+  'w',
+  'x',
+  'y',
+  'z',
+] as const

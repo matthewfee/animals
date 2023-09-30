@@ -28,7 +28,7 @@ export const AnimalRows = ({ animals }: { animals: Animal[] }) => {
   }
 
   return animals.map((animal) => (
-    <TableRow key={animal.name}>
+    <TableRow key={animal.id}>
       <TableCell>{animal.name}</TableCell>
       <TableCell>{animal.size}</TableCell>
       <TableCell>{animal.weight}</TableCell>
