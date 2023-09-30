@@ -5,8 +5,8 @@ import {
   SoundLevel,
   SoundLevels,
 } from '@/data/baseAnimals.ts'
+import { timesToRepeatSound } from '@/utils/repeatSoundCount.ts'
 
-// determines the sound level of an animal based on its size and weight
 export class AnimalClass {
   id: string
   name: string
@@ -37,6 +37,9 @@ export class AnimalClass {
     if (this.loudness === SoundLevels.VERY_LOUD) {
       sound = sound.toUpperCase() + '!!!!!'
     }
+
+    const repeatCount = timesToRepeatSound(this.size)
+    sound = `${sound} `.repeat(repeatCount).trim()
 
     return sound
   }
