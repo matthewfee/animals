@@ -15,7 +15,7 @@ export const AnimalsTable = () => {
 
   return (
     <Table>
-      <TableCaption>Animals.</TableCaption>
+      <TableCaption>Animals</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className='w-[100px]'>Name</TableHead>

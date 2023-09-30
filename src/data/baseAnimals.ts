@@ -15,6 +15,15 @@ export const AnimalWeights = {
 
 export type AnimalWeight = (typeof AnimalWeights)[keyof typeof AnimalWeights]
 
+export const SoundLevels = {
+  QUIET: 'quiet',
+  MEDIUM: 'medium',
+  LOUD: 'loud',
+  VERY_LOUD: 'very loud',
+}
+
+export type SoundLevel = (typeof SoundLevels)[keyof typeof SoundLevels]
+
 // note that this interface is only for the base data, the methods are added when instantiating the class.
 export interface Animal {
   id: string
@@ -23,21 +32,24 @@ export interface Animal {
   size: AnimalSize
   weight: AnimalWeight
   canFly: boolean
+  loudness: SoundLevel
 }
 
 export const CAT = {
   id: uuidv4(),
   name: 'Cat',
   sound: 'Meow',
+  loudness: SoundLevels.QUIET,
   size: AnimalSizes.SMALL,
   weight: AnimalWeights.LIGHT,
   canFly: false,
-} satisfies Animal
+}
 
 export const DOG = {
   id: uuidv4(),
   name: 'Dog',
   sound: 'Woof',
+  loudness: SoundLevels.MEDIUM,
   size: AnimalSizes.MEDIUM,
   weight: AnimalWeights.MEDIUM,
   canFly: false,
@@ -48,6 +60,7 @@ export const ELEPHANT = {
   name: 'Elephant',
   sound: 'Trumpet',
   size: AnimalSizes.LARGE,
+  loudness: SoundLevels.VERY_LOUD,
   weight: AnimalWeights.HEAVY,
   canFly: false,
 } satisfies Animal
@@ -57,6 +70,7 @@ export const BIRD = {
   name: 'Bird',
   sound: 'Chirp',
   size: AnimalSizes.SMALL,
+  loudness: SoundLevels.MEDIUM,
   weight: AnimalWeights.LIGHT,
   canFly: true,
 } satisfies Animal
