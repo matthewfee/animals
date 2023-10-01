@@ -5,7 +5,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div
       className={
-        'dark flex h-[110vh] w-full justify-center bg-background p-4 text-foreground'
+        'dark flex min-h-[110vh] w-full justify-center bg-background p-4 text-foreground'
       }
     >
       <main
