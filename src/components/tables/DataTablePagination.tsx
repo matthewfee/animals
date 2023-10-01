@@ -8,7 +8,7 @@ import { Table } from '@tanstack/react-table'
 
 export function DataTablePagination<TData>({ table }: { table: Table<TData> }) {
   return (
-    <div className='flex items-center justify-end px-2'>
+    <div className='m-4 flex items-center justify-end px-2'>
       <div className='flex items-center space-x-6 lg:space-x-8'>
         <div className='flex w-[100px] items-center justify-center text-sm font-medium'>
           Page {table.getState().pagination.pageIndex + 1} of{' '}
