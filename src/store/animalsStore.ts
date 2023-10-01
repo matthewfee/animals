@@ -62,6 +62,8 @@ export const useAnimalsStore = create<AnimalsStore>((set, get) => ({
     })
     set({ animals: newAnimalPositions })
   },
+
+  // puts the animal in front of the destination animal
   fly({
     animalToMove,
     destinationAnimal,
@@ -74,32 +76,15 @@ export const useAnimalsStore = create<AnimalsStore>((set, get) => ({
     const filteredAnimals = animals.filter(
       (animal) => animal.id !== animalToMove.id,
     )
-
-    console.log({
-      filteredAnimals,
-      filteredAnimalsLength: filteredAnimals.length,
-    })
-
     const indexToInsert = animals.findIndex(
       (a) => a.id === destinationAnimal.id,
     )
-    // put the animal in front of the destination animal
-    console.log({
-      indexToInsert,
-      destinationAnimal,
-      animalToMove,
-    })
 
-    // add the animal to the array at the indexToInsert
     const newAnimals = [
       ...filteredAnimals.slice(0, indexToInsert),
       animalToMove,
       ...filteredAnimals.slice(indexToInsert),
     ]
-
-    console.log({
-      newAnimals,
-    })
 
     set({ animals: newAnimals })
   },
