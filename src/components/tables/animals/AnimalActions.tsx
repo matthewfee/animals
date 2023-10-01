@@ -53,74 +53,65 @@ export function AnimalActions({ row }: { row: Row<Animal> }) {
   }
 
   return (
-    <DropdownMenu
-      open={isMenuOpen}
-      onOpenChange={(isOpen) => setIsMenuOpen(isOpen)}
+    <Dialog
+      open={isDeleteDialogOpen}
+      onOpenChange={(open) => {
+        setIsDeleteDialogOpen(open)
+        setIsMenuOpen(false)
+      }}
     >
-      <DropdownMenuTrigger asChild>
-        <Button variant='ghost' className='h-8 w-8 p-0'>
-          <span className='sr-only'>Open menu</span>
-          <MoreHorizontal className='h-4 w-4' />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className={'dark'}>
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          className={'flex items-center gap-2'}
-          onClick={() => {
-            makeSound(row.original)
-          }}
-        >
-          <ChatBubbleIcon color={PRIMARY_BLUE} /> Make Sound
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <Dialog
-          open={isDeleteDialogOpen}
-          onOpenChange={(isOpen) => {
-            setIsMenuOpen(isOpen)
-          }}
-        >
+      <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button variant='ghost' className='h-8 w-8 p-0'>
+            <span className='sr-only'>Open menu</span>
+            <MoreHorizontal className='h-4 w-4' />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align='end' className={'dark'}>
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem
+            className={'flex items-center gap-2'}
+            onClick={() => {
+              makeSound(row.original)
+            }}
+          >
+            <ChatBubbleIcon color={PRIMARY_BLUE} /> Make Sound
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             className={'flex gap-2'}
             onClick={(e) => {
               e.preventDefault()
             }}
           >
-            <DialogTrigger
-              className={'flex items-center gap-2'}
-              onClick={() => {
-                setIsDeleteDialogOpen(true)
-              }}
-            >
+            <DialogTrigger className={'flex items-center gap-2'}>
               <Cross1Icon color={PRIMARY_RED} />
               Delete
-            </DialogTrigger>
-            <DialogContent className={'dark'}>
-              <DialogHeader>
-                <DialogTitle>
-                  Are you sure you would like to delete {row.original.name}?
-                </DialogTitle>
-                <DialogDescription className={'p-4'}>
-                  Once deleted, {row.original.name} will be gone forever.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <Button
-                  type={'submit'}
-                  variant={'destructive'}
-                  onClick={() => {
-                    setIsDeleteDialogOpen(false)
-                    setIsMenuOpen(false)
-                    handleAnimalRemove(row.original)
-                  }}
-                >
-                  Delete
-                </Button>
-              </DialogFooter>
-            </DialogContent>{' '}
+            </DialogTrigger>{' '}
           </DropdownMenuItem>
-        </Dialog>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DialogContent className={'dark'}>
+        <DialogHeader>
+          <DialogTitle>
+            Are you sure you would like to delete {row.original.name}?
+          </DialogTitle>
+          <DialogDescription className={'p-4'}>
+            Once deleted, {row.original.name} will be gone forever.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button
+            type={'submit'}
+            variant={'destructive'}
+            onClick={() => {
+              handleAnimalRemove(row.original)
+            }}
+          >
+            Delete
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }
