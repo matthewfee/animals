@@ -54,7 +54,7 @@ export const CreateAnimalForm = () => {
       sound: undefined,
       loudness: undefined,
       weight: undefined,
-      canFly: undefined,
+      canFly: false,
     },
     mode: 'onBlur',
   })
