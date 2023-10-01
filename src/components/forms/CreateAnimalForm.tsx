@@ -16,13 +16,14 @@ import { randomAnimal } from '@/utils/randomAnimal.ts'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
 import { useAnimalsStore } from '@/store/animalsStore.ts'
 import { v4 as uuidv4 } from 'uuid'
-import { MouseEvent } from 'react'
+import { useState, MouseEvent } from 'react'
 import { Screens } from '@/store/screenStore.ts'
 import { useScreenStore } from '@/store/screenStore.ts'
 import { FormFieldSelect } from '@/components/forms/FormFieldSelect.tsx'
 import { FormFieldInput } from '@/components/forms/FormFieldInput.tsx'
 import { AnimalClass } from '@/classes/animal.tsx'
 import { useToast } from '@/components/ui/use-toast.ts'
+import { Loader2 } from 'lucide-react'
 
 const animalCreateFormSchema = z.object({
   name: z
@@ -46,6 +47,8 @@ const animalCreateFormSchema = z.object({
 export const CreateAnimalForm = () => {
   const addAnimal = useAnimalsStore((state) => state.addAnimal)
   const { toast } = useToast()
+
+  const [loading, setLoading] = useState(false)
   const form = useForm<z.infer<typeof animalCreateFormSchema>>({
     resolver: zodResolver(animalCreateFormSchema),
     defaultValues: {
@@ -82,10 +85,13 @@ export const CreateAnimalForm = () => {
     setScreen(Screens.ANIMALS)
   }
 
-  function generateRandomAnimal(e: MouseEvent<HTMLButtonElement>) {
+  async function generateRandomAnimal(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
-    const newAnimal = randomAnimal()
+
+    setLoading(true)
+    const newAnimal = await randomAnimal()
     form.reset(newAnimal)
+    setLoading(false)
   }
 
   return (
@@ -157,8 +163,19 @@ export const CreateAnimalForm = () => {
         />
 
         <div className={'flex justify-end gap-2'}>
-          <Button onClick={generateRandomAnimal}>Random Animal</Button>
-          <Button type='submit' disabled={!form.formState.isValid}>
+          <Button
+            className={'flex w-[140px] justify-center'}
+            variant={'secondary'}
+            onClick={generateRandomAnimal}
+            disabled={loading}
+          >
+            {loading ? (
+              <Loader2 className='mr-2 h-4 w-4 animate-spin'></Loader2>
+            ) : (
+              `Random Animal`
+            )}
+          </Button>
+          <Button type='submit' disabled={!form.formState.isValid || loading}>
             Submit
           </Button>
         </div>
