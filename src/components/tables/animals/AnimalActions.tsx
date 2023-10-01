@@ -16,12 +16,24 @@ import { MoreHorizontal } from 'lucide-react'
 import { ChatBubbleIcon, Cross1Icon } from '@radix-ui/react-icons'
 import { PRIMARY_BLUE, PRIMARY_RED } from '@/constants/colors.ts'
 import { Row } from '@tanstack/react-table'
+import {
+  DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog.tsx'
+import { useState } from 'react'
 
 export function AnimalActions({ row }: { row: Row<Animal> }) {
   const removeAnimal = useAnimalsStore((state) => state.removeAnimal)
   const { toast } = useToast()
   const { makeSound } = useSound()
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   function handleAnimalRemove(animal: Animal) {
     try {
       removeAnimal(animal.id)
@@ -41,7 +53,10 @@ export function AnimalActions({ row }: { row: Row<Animal> }) {
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu
+      open={isMenuOpen}
+      onOpenChange={(isOpen) => setIsMenuOpen(isOpen)}
+    >
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' className='h-8 w-8 p-0'>
           <span className='sr-only'>Open menu</span>
@@ -51,7 +66,7 @@ export function AnimalActions({ row }: { row: Row<Animal> }) {
       <DropdownMenuContent align='end' className={'dark'}>
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem
-          className={'flex gap-2'}
+          className={'flex items-center gap-2'}
           onClick={() => {
             makeSound(row.original)
           }}
@@ -59,15 +74,52 @@ export function AnimalActions({ row }: { row: Row<Animal> }) {
           <ChatBubbleIcon color={PRIMARY_BLUE} /> Make Sound
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className={'flex gap-2'}
-          onClick={() => {
-            handleAnimalRemove(row.original)
+        <Dialog
+          open={isDeleteDialogOpen}
+          onOpenChange={(isOpen) => {
+            setIsMenuOpen(isOpen)
           }}
         >
-          <Cross1Icon color={PRIMARY_RED} />
-          Delete
-        </DropdownMenuItem>
+          <DropdownMenuItem
+            className={'flex gap-2'}
+            onClick={(e) => {
+              e.preventDefault()
+            }}
+          >
+            <DialogTrigger
+              className={'flex items-center gap-2'}
+              onClick={() => {
+                setIsDeleteDialogOpen(true)
+              }}
+            >
+              <Cross1Icon color={PRIMARY_RED} />
+              Delete
+            </DialogTrigger>
+            <DialogContent className={'dark'}>
+              <DialogHeader>
+                <DialogTitle>
+                  Are you sure you would like to delete {row.original.name}?
+                </DialogTitle>
+                <DialogDescription className={'p-4'}>
+                  Once deleted, {row.original.name} will be gone forever.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button
+                  type={'submit'}
+                  variant={'destructive'}
+                  onClick={() => {
+                    setIsDeleteDialogOpen(false)
+                    setIsMenuOpen(false)
+                    handleAnimalRemove(row.original)
+                  }}
+                >
+                  Delete
+                </Button>
+              </DialogFooter>
+            </DialogContent>{' '}
+          </DropdownMenuItem>
+        </Dialog>
       </DropdownMenuContent>
     </DropdownMenu>
   )
