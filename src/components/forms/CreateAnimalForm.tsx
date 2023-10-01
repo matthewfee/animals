@@ -118,7 +118,7 @@ export const CreateAnimalForm = () => {
           options={Object.values(AnimalSizes)}
           name={'size'}
           description={
-            'This is your new animals size. Small animals will repeat their sounds more often.'
+            'Small animals will repeat their sounds more often. Larger animals will scare smaller animals away.'
           }
           label={'Size'}
           placeholder={`Select a size`}
@@ -137,7 +137,9 @@ export const CreateAnimalForm = () => {
           control={form.control}
           options={Object.values(AnimalWeights)}
           name={'weight'}
-          description={'This is your new animals weight.'}
+          description={
+            'When making a sound, weight is used as a tiebreaker when size is even.'
+          }
           placeholder={`Select weight`}
           label={'Weight'}
         />
@@ -155,7 +157,8 @@ export const CreateAnimalForm = () => {
                 />
               </FormControl>
               <FormDescription>
-                This is your new animals' ability to fly.
+                This is your new animals' ability to fly. Flying animals can go
+                all over!
               </FormDescription>
               <FormMessage />
             </FormItem>

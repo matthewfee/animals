@@ -60,7 +60,7 @@ export function FlightDialog({
       const animalSound = new AnimalClass(animal).makeSound()
 
       toast({
-        title: `Flight of ${animal.name}`,
+        title: `Flight of the ${animal.name}`,
         description: `${animal.name} has flown to ${destinationAnimal.name}. ♫ ${animalSound} ♫ ${destinationAnimalSound} ♫. Looks like they are best friends!`,
       })
 
