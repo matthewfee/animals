@@ -32,7 +32,7 @@ const IMMORTAL_ANIMALS_IDS = IMMORTAL_ANIMALS.map((animal) => animal?.id)
 export const useAnimalsStore = create<AnimalsStore>((set, get) => ({
   animals: [...STARTING_ANIMALS],
   addAnimal: (animal: Animal) => {
-    set({ animals: [...get().animals, animal] })
+    set({ animals: [animal, ...get().animals] })
   },
   removeAnimal: (id: Animal['id']) => {
     const animal = get().animals.find((animal) => animal.id === id)
