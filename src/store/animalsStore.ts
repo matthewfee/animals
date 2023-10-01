@@ -25,9 +25,8 @@ interface AnimalsStore {
 }
 
 const CHICKEN = STARTING_ANIMALS.find((animal) => animal.name === 'Chicken')
-const DUCK = STARTING_ANIMALS.find((animal) => animal.name === 'Duck')
 
-const IMMORTAL_ANIMALS = [CHICKEN, DUCK]
+const IMMORTAL_ANIMALS = [CHICKEN]
 const IMMORTAL_ANIMALS_IDS = IMMORTAL_ANIMALS.map((animal) => animal?.id)
 
 export const useAnimalsStore = create<AnimalsStore>((set, get) => ({
