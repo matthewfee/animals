@@ -21,12 +21,14 @@ export function FormFieldSelect<T extends FieldValues>({
   options,
   label,
   description,
+  placeholder,
 }: {
   control: Control<T>
   name: Path<T>
   options: string[]
   label: string
   description?: string
+  placeholder?: string
 }) {
   return (
     <FormField
@@ -42,7 +44,7 @@ export function FormFieldSelect<T extends FieldValues>({
           >
             <FormControl>
               <SelectTrigger>
-                <SelectValue placeholder={`Select your animal's size`} />
+                <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
             <SelectContent>

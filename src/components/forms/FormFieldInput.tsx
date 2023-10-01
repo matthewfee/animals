@@ -27,7 +27,7 @@ export function FormFieldInput<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem onBlur={field.onBlur}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <Input
@@ -36,6 +36,7 @@ export function FormFieldInput<T extends FieldValues>({
               onChange={(e) => {
                 field.onChange(e)
               }}
+              onBlur={field.onBlur}
             />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}

@@ -12,44 +12,51 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button.tsx'
-import { randomAnimal, randomAnimalName } from '@/utils/randomAnimal.ts'
+import { randomAnimal } from '@/utils/randomAnimal.ts'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
 import { useAnimalsStore } from '@/store/animalsStore.ts'
 import { v4 as uuidv4 } from 'uuid'
 import { MouseEvent } from 'react'
-import { generateRandomSound } from '@/utils/randomSound.ts'
-import { getRandom } from '@/utils/random.ts'
 import { Screens } from '@/store/screenStore.ts'
 import { useScreenStore } from '@/store/screenStore.ts'
 import { FormFieldSelect } from '@/components/forms/FormFieldSelect.tsx'
 import { FormFieldInput } from '@/components/forms/FormFieldInput.tsx'
+import { AnimalClass } from '@/classes/animal.tsx'
+import { useToast } from '@/components/ui/use-toast.ts'
 
 const animalCreateFormSchema = z.object({
   name: z
     .string()
-    .min(1, 'Name is required')
-    .max(40, 'Name must be less than 40 characters'),
+    .min(1, 'Every animal must have a name!')
+    .max(
+      40,
+      'That name is too long for an animal. The other animals will laugh at it.',
+    )
+    .regex(/^\D*$/, 'Numbers are not names! Animals are not robots!'),
   size: z.nativeEnum(AnimalSizes),
   sound: z
     .string()
-    .min(1, 'Sound is required')
-    .max(40, 'Sound must be less than 40 characters'),
+    .min(1, 'Your animal needs a sound!')
+    .max(40, 'Sound must be less than 40 characters')
+    .regex(/^\D*$/, 'Numbers are not sounds! Animals are not robots!'),
   loudness: z.nativeEnum(SoundLevels),
   weight: z.nativeEnum(AnimalWeights),
   canFly: z.boolean(),
 })
 export const CreateAnimalForm = () => {
   const addAnimal = useAnimalsStore((state) => state.addAnimal)
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof animalCreateFormSchema>>({
     resolver: zodResolver(animalCreateFormSchema),
     defaultValues: {
-      name: randomAnimalName(),
-      size: getRandom(Object.values(AnimalSizes)),
-      sound: generateRandomSound(),
-      loudness: getRandom(Object.values(SoundLevels)),
-      weight: getRandom(Object.values(AnimalWeights)),
-      canFly: Math.random() > 0.5,
+      name: undefined,
+      size: undefined,
+      sound: undefined,
+      loudness: undefined,
+      weight: undefined,
+      canFly: undefined,
     },
+    mode: 'onBlur',
   })
   const setScreen = useScreenStore((state) => state.setScreen)
   function onSubmit(data: z.infer<typeof animalCreateFormSchema>) {
@@ -57,13 +64,21 @@ export const CreateAnimalForm = () => {
       form.trigger()
       return
     }
-
     const id = uuidv4()
-    addAnimal({
+    const newAnimal = {
       ...data,
       id,
-    })
+    }
+
+    addAnimal(newAnimal)
     form.reset()
+    const sound = new AnimalClass(newAnimal).makeSound()
+
+    toast({
+      title: 'Animal Created',
+      description: `${data.name} has been created. Their sound is "${sound}."`,
+    })
+
     setScreen(Screens.ANIMALS)
   }
 
@@ -97,9 +112,10 @@ export const CreateAnimalForm = () => {
           options={Object.values(AnimalSizes)}
           name={'size'}
           description={
-            'This is your new animals size.Small animals will repeat their sounds more often.'
+            'This is your new animals size. Small animals will repeat their sounds more often.'
           }
           label={'Size'}
+          placeholder={`Select a size`}
         />
 
         <FormFieldSelect
@@ -108,6 +124,7 @@ export const CreateAnimalForm = () => {
           name={'loudness'}
           description={'This is your new animals loudness.'}
           label={'Loudness'}
+          placeholder={`Select loudness`}
         />
 
         <FormFieldSelect
@@ -115,6 +132,7 @@ export const CreateAnimalForm = () => {
           options={Object.values(AnimalWeights)}
           name={'weight'}
           description={'This is your new animals weight.'}
+          placeholder={`Select weight`}
           label={'Weight'}
         />
 
