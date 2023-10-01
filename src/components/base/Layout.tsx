@@ -1,5 +1,4 @@
 import { ReactNode } from 'react'
-import { Toaster } from '@/components/ui/toaster.tsx'
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   return (
@@ -15,7 +14,6 @@ export const Layout = ({ children }: { children: ReactNode }) => {
       >
         {children}
       </main>
-      <Toaster />
     </div>
   )
 }
