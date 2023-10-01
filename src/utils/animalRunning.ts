@@ -77,7 +77,7 @@ export function shouldRunAway(
   }
 
   const sizeComparison = sortAnimalSize(animal, adjacentAnimal)
-  if (sizeComparison < 0) {
+  if (sizeComparison > 0) {
     return true
   } else if (sizeComparison === 0) {
     return sortAnimalWeight(animal, adjacentAnimal) < 0
