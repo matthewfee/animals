@@ -39,6 +39,7 @@ export function DataTable<TData, TValue>({
     state: {
       sorting,
     },
+    autoResetPageIndex: false,
   })
 
   return (
