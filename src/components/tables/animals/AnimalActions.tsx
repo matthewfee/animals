@@ -6,57 +6,43 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { DropdownMenuContent } from '@/components/ui/dropdown-menu.tsx'
-import { useAnimalsStore } from '@/store/animalsStore.ts'
-import { useToast } from '@/components/ui/use-toast.ts'
 import { useSound } from '@/hooks/useSound.ts'
 import { Animal } from '@/data/baseAnimals.ts'
-import { AnimalClass } from '@/classes/animal.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { MoreHorizontal } from 'lucide-react'
-import { ChatBubbleIcon, Cross1Icon } from '@radix-ui/react-icons'
-import { PRIMARY_BLUE, PRIMARY_RED } from '@/constants/colors.ts'
-import { Row } from '@tanstack/react-table'
 import {
-  DialogTrigger,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogHeader,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog.tsx'
-import { useState } from 'react'
+  ChatBubbleIcon,
+  Cross1Icon,
+  PaperPlaneIcon,
+} from '@radix-ui/react-icons'
+import { PRIMARY_BLUE, PRIMARY_GREEN, PRIMARY_RED } from '@/constants/colors.ts'
+import { Row } from '@tanstack/react-table'
+import { DialogTrigger, Dialog } from '@/components/ui/dialog.tsx'
+import { useCallback, useState } from 'react'
+
+import { FlightDialog } from '@/components/dialogs/FlightDialog.tsx'
+import { DeleteDialog } from '@/components/dialogs/DeleteDialog.tsx'
 
 export function AnimalActions({ row }: { row: Row<Animal> }) {
-  const removeAnimal = useAnimalsStore((state) => state.removeAnimal)
-  const { toast } = useToast()
   const { makeSound } = useSound()
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  function handleAnimalRemove(animal: Animal) {
-    try {
-      removeAnimal(animal.id)
-      const sound = new AnimalClass(animal).makeSound()
-      toast({
-        title: `Death of ${animal.name}`,
-        description: `${animal.name} has perished. Their sound was "${sound}." It will never be heard again.
-            `,
-      })
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: `Animal could not be removed. ${animal.name} is immortal.`,
-        variant: 'destructive',
-      })
-    }
-  }
+  const [isFlightDialogOpen, setIsFlightDialogOpen] = useState(false)
+
+  const resetUI = useCallback(() => {
+    setIsDialogOpen(false)
+    setIsDeleteDialogOpen(false)
+    setIsFlightDialogOpen(false)
+    setIsMenuOpen(false)
+  }, [])
 
   return (
     <Dialog
-      open={isDeleteDialogOpen}
+      open={isDialogOpen}
       onOpenChange={(open) => {
-        setIsDeleteDialogOpen(open)
+        setIsDialogOpen(open)
         setIsMenuOpen(false)
       }}
     >
@@ -84,34 +70,38 @@ export function AnimalActions({ row }: { row: Row<Animal> }) {
               e.preventDefault()
             }}
           >
-            <DialogTrigger className={'flex items-center gap-2'}>
+            <DialogTrigger
+              className={'flex items-center gap-2'}
+              onClick={() => {
+                setIsDeleteDialogOpen(true)
+                setIsDialogOpen(true)
+              }}
+            >
               <Cross1Icon color={PRIMARY_RED} />
               Delete
             </DialogTrigger>{' '}
           </DropdownMenuItem>
+          {row.original.canFly && (
+            <DropdownMenuItem
+              className={'flex'}
+              onClick={(e) => {
+                e.preventDefault()
+              }}
+            >
+              <DialogTrigger
+                className={'flex items-center gap-2'}
+                onClick={() => {
+                  setIsFlightDialogOpen(true)
+                }}
+              >
+                <PaperPlaneIcon color={PRIMARY_GREEN} /> Fly away
+              </DialogTrigger>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
-      <DialogContent className={'dark'}>
-        <DialogHeader>
-          <DialogTitle>
-            Are you sure you would like to delete {row.original.name}?
-          </DialogTitle>
-          <DialogDescription className={'p-4'}>
-            Once deleted, {row.original.name} will be gone forever.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <Button
-            type={'submit'}
-            variant={'destructive'}
-            onClick={() => {
-              handleAnimalRemove(row.original)
-            }}
-          >
-            Delete
-          </Button>
-        </DialogFooter>
-      </DialogContent>
+      {isDeleteDialogOpen && <DeleteDialog row={row} resetUI={resetUI} />}
+      {isFlightDialogOpen && <FlightDialog row={row} resetUI={resetUI} />}
     </Dialog>
   )
 }

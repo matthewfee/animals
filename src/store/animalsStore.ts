@@ -15,6 +15,13 @@ interface AnimalsStore {
     animal: Animal
     direction: Direction
   }) => void
+  fly: ({
+    animalToMove,
+    destinationAnimal,
+  }: {
+    animalToMove: Animal
+    destinationAnimal: Animal
+  }) => void
 }
 
 const CHICKEN = STARTING_ANIMALS.find((animal) => animal.name === 'Chicken')
@@ -54,6 +61,47 @@ export const useAnimalsStore = create<AnimalsStore>((set, get) => ({
       animals: get().animals,
     })
     set({ animals: newAnimalPositions })
+  },
+  fly({
+    animalToMove,
+    destinationAnimal,
+  }: {
+    animalToMove: Animal
+    destinationAnimal: Animal
+  }) {
+    const animals = get().animals
+
+    const filteredAnimals = animals.filter(
+      (animal) => animal.id !== animalToMove.id,
+    )
+
+    console.log({
+      filteredAnimals,
+      filteredAnimalsLength: filteredAnimals.length,
+    })
+
+    const indexToInsert = animals.findIndex(
+      (a) => a.id === destinationAnimal.id,
+    )
+    // put the animal in front of the destination animal
+    console.log({
+      indexToInsert,
+      destinationAnimal,
+      animalToMove,
+    })
+
+    // add the animal to the array at the indexToInsert
+    const newAnimals = [
+      ...filteredAnimals.slice(0, indexToInsert),
+      animalToMove,
+      ...filteredAnimals.slice(indexToInsert),
+    ]
+
+    console.log({
+      newAnimals,
+    })
+
+    set({ animals: newAnimals })
   },
   removeAllAnimals: () => {
     set({ animals: [] })
