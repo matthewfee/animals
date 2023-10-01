@@ -68,11 +68,37 @@ export function runAnimalAway({
   return animals
 }
 
-export function shouldRunAway(
-  animal: Animal,
-  adjacentAnimal: Animal | undefined,
-): boolean {
+export function shouldRunAway({
+  animal,
+  adjacentAnimal,
+  animals,
+  direction,
+}: {
+  animal: Animal
+  adjacentAnimal: Animal | undefined
+  animals: Animal[]
+  direction: Direction
+}): boolean {
   if (!adjacentAnimal) {
+    return false
+  }
+
+  const adjacentIsFirstAnimal = adjacentAnimal.id === animals[0].id
+  const adjacentIsLastAnimal =
+    adjacentAnimal.id === animals[animals.length - 1].id
+
+  const cannotRunAway =
+    (direction === Directions.UP && adjacentIsFirstAnimal) ||
+    (direction === Directions.DOWN && adjacentIsLastAnimal)
+
+  if (cannotRunAway) {
+    return false
+  }
+
+  if (
+    direction === Directions.DOWN &&
+    animal.id === animals[animals.length - 1].id
+  ) {
     return false
   }
 

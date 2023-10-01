@@ -20,12 +20,26 @@ export const useSound = () => {
 
     const animalsThatHaveRunAway: Animal[] = []
 
-    if (shouldRunAway(animal, previousAnimal)) {
+    const previousAnimalShouldRunAway = shouldRunAway({
+      animal,
+      adjacentAnimal: previousAnimal,
+      animals,
+      direction: Directions.UP,
+    })
+
+    if (previousAnimalShouldRunAway) {
       runAway({ animal: previousAnimal!, direction: Directions.UP })
       animalsThatHaveRunAway.push(previousAnimal!)
     }
 
-    if (shouldRunAway(animal, nextAnimal)) {
+    const nextAnimalShouldRunAway = shouldRunAway({
+      animal,
+      adjacentAnimal: nextAnimal,
+      animals,
+      direction: Directions.DOWN,
+    })
+
+    if (nextAnimalShouldRunAway) {
       runAway({ animal: nextAnimal!, direction: Directions.DOWN })
       animalsThatHaveRunAway.push(nextAnimal!)
     }
