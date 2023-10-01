@@ -216,4 +216,13 @@ export const STARTING_ANIMALS = [
     canFly: true,
     loudness: 'loud',
   },
+  {
+    id: uuidv4(),
+    name: 'Chicken',
+    sound: 'Cluck',
+    size: 'Small',
+    weight: 'Light',
+    canFly: false,
+    loudness: 'quiet',
+  },
 ] as const satisfies ReadonlyArray<Animal>
