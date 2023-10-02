@@ -1,7 +1,6 @@
 import { useAnimalsStore } from '@/store/animalsStore.ts'
 import { DataTable } from '@/components/tables/DataTable.tsx'
 import { ANIMAL_COLUMNS } from '@/components/tables/animals/AnimalColumns.tsx'
-import { Button } from '@/components/ui/button.tsx'
 import { useCallback, useEffect } from 'react'
 import { getRandom } from '@/utils/random.ts'
 import { useSound } from '@/hooks/useSound.ts'
